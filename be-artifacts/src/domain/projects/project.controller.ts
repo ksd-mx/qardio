@@ -5,7 +5,7 @@ import { ProjectService } from './project.service';
 export class ProjectController {
   constructor(private readonly service:ProjectService) {}
   @Get('hello')
-  async getHello() : Promise<string> {
+  getHello() : string {
     return this.service.getHello();
   }
 }
