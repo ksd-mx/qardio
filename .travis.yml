@@ -1,0 +1,56 @@
+language: bash
+dist: bionic
+services:
+  - docker
+branches:
+  only:
+  - master          # 1 - unified in-progress code
+  - /(feature/).*/  # 2 - individual implementation
+  - /(hotfix/).*/   # 3 - emergency maintenance
+  - /(fix/).*/      # 4 - planned maintenance
+  - production      # 5 - released unified code
+  - destroy         # 6 - decomissioned code
+before_install:
+  - chmod +x $(find ./ci -name *.sh)
+  - ./ci/tools/terraform/install.sh 0.12.21
+jobs:
+  include:
+    - stage: QUALITY_CHECK
+      # MAKE SURE THE CODE IS WELL WRITTEN (LINTING) AND PASS TESTS
+      script: ./ci/jobs/quality_check.sh
+      if: 'type IN (pull_request) and branch =~ /^(master|production)$/'
+      
+    - stage: QUALITY_CHECK
+      # MAKE SURE FORMATION SCRIPTS ARE VALID AND WELLFORMED/FORMATED
+      script: ./ci/jobs/formation_check.sh
+      if: 'type IN (pull_request) and branch =~ /^(master|production)$/'
+
+    - stage: IMG_PUSH
+      # PUSH UPDATED DOCKER IMAGES TO ECR REPOSITORIES
+      script: ./ci/jobs/image_push.sh
+      if: 'branch =~ /^(master|production)$/'
+
+    - stage: STG_PLAN
+      # VALIDATE CLOUD FORMATION PLAN FOR STAGING
+      script: ./ci/jobs/staging_plan.sh
+      if: 'branch =~ /^(master|production)$/'
+
+    - stage: STG_APPLY
+      # APPLY CLOUD FORMATION PLAN FOR STAGING
+      script: ./ci/jobs/staging_apply.sh
+      if: 'branch =~ /^(master|production)$/'
+
+    - stage: PRD_PLAN
+      # VALIDATE CLOUD FORMATION PLAN FOR PRODUCTION
+      script: ./ci/jobs/production_plan.sh
+      if: 'branch == "production"'
+
+    - stage: PRD_APPLY
+      # APPLY CLOUD FORMATION PLAN FOR PRODUCTION
+      script: ./ci/jobs/production_apply.sh
+      if: 'branch == "production"'
+
+    - stage: DESTROY
+      # DESTROY CLOUD FORMATION UPON DESTRUCTION REQUEST
+      script: ./ci/jobs/destroy.sh
+      if: 'branch == "destroy"'

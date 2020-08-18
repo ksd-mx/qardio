@@ -1,0 +1,34 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "newsfeed-AllowIdentityManagement",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateServiceLinkedRole",
+        "iam:CreateRole",
+        "iam:GetInstanceProfile",
+        "iam:DeletePolicy",
+        "iam:DetachRolePolicy",
+        "iam:GetRole",
+        "iam:AddRoleToInstanceProfile",
+        "iam:ListInstanceProfilesForRole",
+        "iam:ListAttachedRolePolicies",
+        "iam:DeleteRole",
+        "iam:TagRole",
+        "iam:PassRole",
+        "iam:GetPolicyVersion",
+        "iam:GetPolicy",
+        "iam:CreatePolicyVersion",
+        "iam:DeletePolicyVersion",
+        "iam:CreateInstanceProfile",
+        "iam:DeleteInstanceProfile",
+        "iam:ListPolicyVersions",
+        "iam:AttachRolePolicy",
+        "iam:CreatePolicy",
+        "iam:RemoveRoleFromInstanceProfile"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
