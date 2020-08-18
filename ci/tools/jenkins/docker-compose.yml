@@ -1,0 +1,12 @@
+version: '3'
+services:
+  jenkins-ci:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    ports:
+      - 50000:50000
+      - 8080:8080
+    restart: unless-stopped
