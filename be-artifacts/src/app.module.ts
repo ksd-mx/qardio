@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectModule } from './domain/projects/project.module';
 import { ModuleModule } from './domain/modules/module.module';
 import { ProcessModule } from './domain/processes/process.module';
@@ -12,6 +13,7 @@ import { OperationService } from './domain/operations/operation.service';
 
 @Module({
   imports: [
+    TypeOrmModule.forRoot(),
     ProjectModule,
     ModuleModule,
     ProcessModule,
