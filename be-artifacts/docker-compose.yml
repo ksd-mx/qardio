@@ -9,13 +9,13 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=toor
       - POSTGRES_DB=artifacts
-  app:
-    container_name: be-artifacts-api
-    build:
-      dockerfile: Dockerfile.dev
-      context: .
-    volumes:
-      - /app/node_modules
-      - ./:/app
-    ports: 
-      - '9000:9000'
+  # app:
+  #   container_name: be-artifacts-api
+  #   build:
+  #     dockerfile: Dockerfile.dev
+  #     context: .
+  #   volumes:
+  #     - /app/node_modules
+  #     - ./:/app
+  #   ports: 
+  #     - '9000:9000'

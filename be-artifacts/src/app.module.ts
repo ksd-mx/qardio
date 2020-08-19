@@ -11,9 +11,11 @@ import { ProcessService } from './domain/processes/process.service';
 import { TransactionService } from './domain/transactions/transaction.service';
 import { OperationService } from './domain/operations/operation.service';
 
+import * as ormconfig from './cfg/database';
+
 @Module({
   imports: [
-    TypeOrmModule.forRoot(),
+    TypeOrmModule.forRoot(ormconfig),
     ProjectModule,
     ModuleModule,
     ProcessModule,
