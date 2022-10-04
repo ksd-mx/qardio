@@ -1,0 +1,21 @@
+version: '3'
+services:
+  postgres:
+    container_name: be-artifacts-db
+    image: postgres:10-alpine
+    ports: 
+      - '5432:5432'
+    environment: 
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=toor
+      - POSTGRES_DB=artifacts
+  # app:
+  #   container_name: be-artifacts-api
+  #   build:
+  #     dockerfile: Dockerfile.dev
+  #     context: .
+  #   volumes:
+  #     - /app/node_modules
+  #     - ./:/app
+  #   ports: 
+  #     - '9000:9000'

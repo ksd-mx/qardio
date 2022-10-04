@@ -1,0 +1,22 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "newsfeed-AllowContainerServiceManagement",
+      "Effect": "Allow",
+      "Action": [
+        "ecs:DeleteCluster",
+        "ecs:CreateService",
+        "ecs:UpdateService",
+        "ecs:DeregisterTaskDefinition",
+        "ecs:DescribeClusters",
+        "ecs:RegisterTaskDefinition",
+        "ecs:DeleteService",
+        "ecs:DescribeTaskDefinition",
+        "ecs:DescribeServices",
+        "ecs:CreateCluster"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

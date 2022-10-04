@@ -1,0 +1,79 @@
+
+default:
+  image: docker:19.03.5
+  services:
+    - docker:19.03.5-dind
+stages:
+  - QUALITY_CHECK
+  - IMG_PUSH
+  - STG_PLAN
+  - STG_APPLY
+  - PRD_PLAN
+  - PRD_APPLY
+  - DESTROY
+before_script:
+    - chmod +x $(find ./ci -name *.sh)
+    - apk update
+    - apk add bash sudo python3
+
+quality_check:
+  stage: QUALITY_CHECK
+  script:
+    - ./ci/scripts/jobs/quality_check.sh
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^(master|feature\/.*|hotfix\/.*|production)$/ || $CI_COMMIT_BRANCH =~ /^(master|feature\/.*|hotfix\/.*|production)$/'
+
+validate_formation:
+  stage: QUALITY_CHECK
+  script:
+    - ./ci/tools/terraform/install.sh 0.12.21
+    - ./ci/scripts/jobs/formation_check.sh
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^(master|feature\/.*|hotfix\/.*|production)$/ || $CI_COMMIT_BRANCH =~ /^(master|feature\/.*|hotfix\/.*|production)$/'
+
+image_push:
+  stage: IMG_PUSH
+  script:
+    - ./ci/scripts/jobs/image_push.sh
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /^(master|production)$/'
+
+staging_plan:
+  stage: STG_PLAN
+  script:
+    - ./ci/tools/terraform/install.sh 0.12.21
+    - ./ci/scripts/jobs/staging_plan.sh
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /^(master|production)$/'
+
+staging_apply:
+  stage: STG_APPLY
+  script:
+    - ./ci/tools/terraform/install.sh 0.12.21
+    - ./ci/scripts/jobs/staging_apply.sh
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /^(master|production)$/'
+
+prodution_plan:
+  stage: PRD_PLAN
+  script:
+    - ./ci/scripts/jobs/production_plan.sh
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "production"'
+
+production_apply:
+  stage: PRD_APPLY
+  script:
+    - ./ci/tools/terraform/install.sh 0.12.21
+    - ./ci/scripts/jobs/production_apply.sh
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "production"'
+
+staging_destroy:
+  stage: DESTROY
+  script:
+    - ./ci/tools/terraform/install.sh 0.12.21
+    - ./ci/scripts/jobs/destroy.sh
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "destroy"'
+      when: manual

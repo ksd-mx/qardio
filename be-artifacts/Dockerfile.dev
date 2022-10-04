@@ -1,0 +1,7 @@
+FROM node:alpine
+WORKDIR /app
+ADD package.json yarn.lock ./
+RUN yarn install --link-duplicates
+ADD . ./
+RUN rm -rf $(yarn cache dir)
+CMD ["yarn", "start"]
